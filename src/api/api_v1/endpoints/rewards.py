@@ -106,10 +106,7 @@ async def rewards(
         and start_date.year == today.year
         and end_date == today
     )
-    since_genesis_cond = (
-        start_date <= GENESIS_DATETIME.date()
-        and end_date == today
-    )
+    since_genesis_cond = start_date <= GENESIS_DATETIME.date() and end_date == today
     if cal_year_cond:
         calendar_year = start_date.year
     elif ytd_cond:
@@ -149,7 +146,9 @@ async def rewards(
     # This "initial" slot could be different for each validator, which is why
     # we don't just add the activation_slots to slots_needed
     first_slot_in_requested_period = await BeaconNode.slot_for_datetime(start_dt_utc)
-    activation_slots = await beacon_node.activation_slots_for_validators(validator_indexes, cache)
+    activation_slots = await beacon_node.activation_slots_for_validators(
+        validator_indexes, cache
+    )
     initial_balances = {}
     for activation_slot in set(activation_slots.values()):
         if activation_slot is None:
@@ -163,15 +162,23 @@ async def rewards(
         # the initial balance will be equal to its balance in the activation epoch.
         if activation_slot > first_slot_in_requested_period:
             initial_balance_slot = activation_slot
-            initial_balances_tmp = await beacon_node.balances_for_slot(initial_balance_slot, vi_with_this_as)
+            initial_balances_tmp = await beacon_node.balances_for_slot(
+                initial_balance_slot, vi_with_this_as
+            )
         else:
             initial_balance_slot = await BeaconNode.slot_for_datetime(start_dt_utc)
-            initial_balances_tmp = db_provider.balances(slots=[initial_balance_slot], validator_indexes=vi_with_this_as)
+            initial_balances_tmp = db_provider.balances(
+                slots=[initial_balance_slot], validator_indexes=vi_with_this_as
+            )
 
         for vi in vi_with_this_as:
-            balance = next(ib for ib in initial_balances_tmp if ib.validator_index == vi)
+            balance = next(
+                ib for ib in initial_balances_tmp if ib.validator_index == vi
+            )
             initial_balances[vi] = InitialBalance(
-                date=(await BeaconNode.datetime_for_slot(initial_balance_slot, timezone)).date(),
+                date=(
+                    await BeaconNode.datetime_for_slot(initial_balance_slot, timezone)
+                ).date(),
                 slot=initial_balance_slot,
                 balance=balance.balance,
             )
@@ -265,6 +272,7 @@ async def rewards(
         validator_balances = [
             b for b in balances if b.validator_index == validator_index
         ]
+        # get the commission rate from beaconchain, 1 if it's not RP
 
         # Sort them by the slot number
         validator_balances = sorted(validator_balances, key=lambda x: x.slot)
@@ -275,6 +283,7 @@ async def rewards(
         eod_balances = []
         total_eth = 0
         total_currency = 0
+        rp_commission = 0.15
         for vb in validator_balances:
             slot_date = (await BeaconNode.datetime_for_slot(vb.slot, timezone)).date()
 
@@ -301,6 +310,7 @@ async def rewards(
                 eod_balances=eod_balances,
                 total_eth=total_eth,
                 total_currency=total_currency,
+                rp_commission=rp_commission,
             )
         )
     return aggregate_rewards

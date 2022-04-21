@@ -1,7 +1,7 @@
 function addInputElement(e) {
     inputGroup = e.parentElement;
     inputGroupContainer = inputGroup.parentElement;
-    newInputGroup = inputGroup.cloneNode(deep=true);
+    newInputGroup = inputGroup.cloneNode(deep = true);
     newInputGroup.classList.add("input-element-to-remove");
 
     // Set value to empty for cloned input element
@@ -28,8 +28,8 @@ function autoSelectTimezone() {
     userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
     selectElement = document.getElementById("selectTimezone");
-    for (i = 0; i < selectElement.length; ++i){
-        if (selectElement.options[i].value == userTimeZone){
+    for (i = 0; i < selectElement.length; ++i) {
+        if (selectElement.options[i].value == userTimeZone) {
             selectElement.value = Intl.DateTimeFormat().resolvedOptions().timeZone
         }
     }
@@ -76,17 +76,17 @@ function selectDateRangeByYear() {
         // toISOString first converts to UTC - handle that by adding the timezone offset
         var endDate = new Date();
         const offset = endDate.getTimezoneOffset();
-        endDate = new Date(endDate.getTime() - (offset*60*1000));
+        endDate = new Date(endDate.getTime() - (offset * 60 * 1000));
         endDatePicker.value = endDate.toISOString().split('T')[0];
     } else {
         // Selected a year as a date, hide datepickers
         showCustomDateRangeInput(false);
 
         startDatePicker = document.getElementById("datePickerStart");
-        startDatePicker.value = selectDateRangeElement.value  + "-01-01";
+        startDatePicker.value = selectDateRangeElement.value + "-01-01";
 
         endDatePicker = document.getElementById("datePickerEnd");
-        endDatePicker.value = selectDateRangeElement.value  + "-12-31";
+        endDatePicker.value = selectDateRangeElement.value + "-12-31";
     }
 }
 
@@ -101,7 +101,7 @@ window.addEventListener("load", () => {
 })
 
 async function handleErrorMessage(response) {
-    const {status} = response;
+    const { status } = response;
 
     const text = await response.text();
     try {
@@ -111,7 +111,7 @@ async function handleErrorMessage(response) {
         } else {
             return Promise.reject(new Error(JSON.stringify(parsed)));
         }
-    } catch(err) {
+    } catch (err) {
         throw new Error(text)
     }
 }
@@ -170,7 +170,7 @@ function compareValues(a, b) {
     // are here. Numbers, text, some custom case-insensitive
     // and natural number ordering, etc. That's up to you.
     // A typical "do whatever JS would do" is:
-    return (a<b) ? -1 : (a>b) ? 1 : 0;
+    return (a < b) ? -1 : (a > b) ? 1 : 0;
 }
 
 function sortTable(table, colnum) {
@@ -185,7 +185,7 @@ function sortTable(table, colnum) {
     let qs = `th:nth-child(${colnum})`;
 
     // and then just... sort the rows:
-    rows.sort( (r1,r2) => {
+    rows.sort((r1, r2) => {
         // get each row's relevant column
         let t1 = r1.querySelector(qs);
         let t2 = r2.querySelector(qs);
@@ -274,7 +274,7 @@ function getRewardsForValidatorIndexes(validatorIndexes) {
 
             rewardTableColumnNames.forEach((columnName) => {
                 headerColumn = document.createElement("th");
-                headerColumn.innerText=columnName;
+                headerColumn.innerText = columnName;
                 combinedRewardsTableHeaderRow.appendChild(headerColumn);
             });
 
@@ -286,7 +286,7 @@ function getRewardsForValidatorIndexes(validatorIndexes) {
 
             // Create a table for each validators' rewards
             rewardsTablesContainer = document.getElementById("rewardsTablesContainer");
-            data.validator_rewards.forEach(({eod_balances, initial_balance, validator_index}) => {
+            data.validator_rewards.forEach(({ eod_balances, initial_balance, validator_index }) => {
                 // Wrapper div
                 divElement = document.createElement("div");
                 divElement.classList.add("m-3");
@@ -297,7 +297,11 @@ function getRewardsForValidatorIndexes(validatorIndexes) {
                 paragraph = document.createElement("p");
                 paragraph.classList.add("lead");
                 paragraph.classList.add("d-inline");
-                paragraph.innerText = "Rewards for validator index " + validator_index;
+                if (data.validator_rewards[validator_index].rp_commission == 1) {
+                    paragraph.innerText = "Rewards for validator index " + validator_index;
+                } else {
+                    paragraph.innerText = "Rewards for Rocketpool validator index " + validator_index;
+                }
                 descriptionDivElement.appendChild(paragraph);
                 divElement.appendChild(descriptionDivElement);
 
@@ -323,7 +327,7 @@ function getRewardsForValidatorIndexes(validatorIndexes) {
                 rewardTableColumnNames.forEach((columnName) => {
                     if (columnName !== "Validator Index") {
                         headerColumn = document.createElement("th");
-                        headerColumn.innerText=columnName;
+                        headerColumn.innerText = columnName;
                         headerRow.appendChild(headerColumn);
                     }
                 });
@@ -396,21 +400,21 @@ function getRewardsForValidatorIndexes(validatorIndexes) {
                 footRow = document.createElement("tr");
 
                 footColumn = document.createElement("td");
-                footColumn.innerText="Total:";
+                footColumn.innerText = "Total:";
                 footRow.appendChild(footColumn);
 
                 footColumn = document.createElement("td");
                 footRow.appendChild(footColumn);
 
                 footColumn = document.createElement("td");
-                footColumn.innerText=totalIncomeEthValidator;
+                footColumn.innerText = totalIncomeEthValidator;
                 footRow.appendChild(footColumn);
 
                 footColumn = document.createElement("td");
                 footRow.appendChild(footColumn);
 
                 footColumn = document.createElement("td");
-                footColumn.innerText=totalIncomeCurrValidator;
+                footColumn.innerText = totalIncomeCurrValidator;
                 footRow.appendChild(footColumn);
 
                 tableFoot.appendChild(footRow);
@@ -527,7 +531,7 @@ async function getRewards() {
             try {
                 data = await handleErrorMessage(response);
                 return data;
-            } catch(error) {
+            } catch (error) {
                 showErrorMessage(error);
                 return false;
             }
@@ -670,8 +674,7 @@ function getCookieValue(name) {
     return document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || ''
 }
 
-function getSelectValues(selectElement)
-{
+function getSelectValues(selectElement) {
     var values = Array();
     for (var option of selectElement.options) {
         values.push(option.value);

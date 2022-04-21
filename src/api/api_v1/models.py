@@ -32,6 +32,9 @@ class ValidatorRewards(BaseModel):
     total_currency: float = Field(
         ..., example=12456.78, description="Total rewards in the requested currency."
     )
+    rp_commission: float = Field(
+        ..., example=12.456, description="RocketPool Commission."
+    )
 
 
 class AggregateRewards(BaseModel):
