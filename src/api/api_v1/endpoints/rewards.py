@@ -292,8 +292,7 @@ async def rewards(
         total_eth = 0
         total_currency = 0
         rp_commission = 0.15
-        url = f"https://beaconcha.in/api/v1/validator/eth1/{validator_index}"
-        url = f"https://beaconcha.in/api/v1/validator/eth1/281763"
+        url = f"https://beaconcha.in/api/v1/rocketpool/validator/{validator_index}"
         # store the response of URL
         json_resp = urlopen(url)
         # storing the JSON response
