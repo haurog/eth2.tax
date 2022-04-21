@@ -521,7 +521,11 @@ async function getRewards() {
         getRewardsForValidatorIndexes(validatorIndexes);
     }
     else if (activeTab.textContent == "Validator public keys") {
+        if (chain == "Ethereum"){
+
+        }
         var pubKeyUrl = new URL("/api/v1/index_for_publickey", window.location.href)
+        console.log(pubKeyUrl)
 
         let pubKeyInputGroups = document.getElementById("pubkey").children;
 
