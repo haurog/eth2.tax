@@ -76,6 +76,11 @@ async def rewards(
         max_length=4,
         example="EUR",
     ),
+    chain: str = Query(
+        ...,
+        description="Chain for which rewards are requested. Either Ethereum or Gnosis",
+        example="Ethereum",
+    ),
     cache: Redis = Depends(depends_redis),
     db_provider: DbProvider = Depends(depends_db),
     beacon_node: BeaconNode = Depends(depends_beacon_node),
@@ -140,6 +145,12 @@ async def rewards(
     start_dt_utc = max(
         timezone.localize(start_dt).astimezone(pytz.utc), GENESIS_DATETIME
     )
+
+    supported_chains = ("Ethereum, Gnosis")
+    if chain not in supported_chains:
+        raise HTTPException(
+            status_code=400, detail=f"Unsupported Chain - {chain}"
+        )
 
     # To retrieve the validator balances, we need to know
     # which slots to retrieve them for
