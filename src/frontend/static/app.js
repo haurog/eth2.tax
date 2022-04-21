@@ -286,7 +286,7 @@ function getRewardsForValidatorIndexes(validatorIndexes) {
 
             // Create a table for each validators' rewards
             rewardsTablesContainer = document.getElementById("rewardsTablesContainer");
-            data.validator_rewards.forEach(({ eod_balances, initial_balance, validator_index }) => {
+            data.validator_rewards.forEach(({ eod_balances, initial_balance, validator_index, rp_commission }) => {
                 // Wrapper div
                 divElement = document.createElement("div");
                 divElement.classList.add("m-3");
@@ -297,7 +297,7 @@ function getRewardsForValidatorIndexes(validatorIndexes) {
                 paragraph = document.createElement("p");
                 paragraph.classList.add("lead");
                 paragraph.classList.add("d-inline");
-                if (data.validator_rewards[validator_index].rp_commission == 1) {
+                if (rp_commission == 1) {
                     paragraph.innerText = "Rewards for validator index " + validator_index;
                 } else {
                     paragraph.innerText = "Rewards for Rocketpool validator index " + validator_index;
