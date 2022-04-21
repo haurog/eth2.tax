@@ -1,3 +1,6 @@
+
+var chain = "Ethereum";
+
 function addInputElement(e) {
     inputGroup = e.parentElement;
     inputGroupContainer = inputGroup.parentElement;
@@ -685,6 +688,21 @@ function populateInputsFromCookies() {
         currencyInput.value = getCookieValue("currency");
     }
 }
+
+function switchChain() {
+    console.log("In chain switch");
+    var imageElement = document.getElementById("chain_logo").innerHTML;
+    console.log(imageElement.innerHTML);
+    if (chain === "Ethereum") {
+        chain = "Gnosis";
+        document.getElementById("chain_logo").innerHTML = `<img src="../static/logo/Gnosis_logo.png" alt="Ethereum" width = "300">`;
+    } else {
+        chain = "Ethereum";
+        document.getElementById("chain_logo").innerHTML = `<img src="../static/logo/Ethereum_logo.png" alt="Ethereum" width = "300">`;
+    }
+    console.log(chain);
+}
+
 
 window.addEventListener("load", function () {
     // populateInputsFromCookies();
