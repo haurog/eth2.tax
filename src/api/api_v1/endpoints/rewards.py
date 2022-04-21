@@ -27,6 +27,7 @@ from urllib.request import urlopen
 
 # import json
 import json
+from types import SimpleNamespace
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -297,7 +298,7 @@ async def rewards(
         json_resp = urlopen(url)
         # storing the JSON response
         # from url in data
-        response = json.loads(json_resp.read())
+        response = json.loads(json_resp, object_hook=lambda d: SimpleNamespace(**d))
         print(response)
         if response.status != 200:
             raise Exception(
