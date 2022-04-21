@@ -37,6 +37,12 @@
         <form id="inputForm" onsubmit="getRewards(); return false;">
             <div class="row p-3">
                 <h2>For which validators would you like to calculate rewards?</h2>
+                <div>
+                    <div id="chain_logo">
+                        <img src="../static/logo/Ethereum_logo.png" alt="Ethereum" width = "300">
+                    </div>
+                    <button onclick="switchChain()">Switch Chain</button>
+                </div>
                 <p>
                     You can add your validators in any of the three
                     following ways:
