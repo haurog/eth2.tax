@@ -32,6 +32,11 @@ from types import SimpleNamespace
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
+
+def applyRPRewards(reward, commission):
+    return reward * (1 + commission) / 2
+
+
 TimezoneEnum = Enum(
     "TimezoneEnum",
     {timezone.replace("/", ""): timezone for timezone in pytz.common_timezones},
@@ -306,15 +311,16 @@ async def rewards(
         else:
             rp_commission = response.data["minipool_node_fee"]
             print(rp_commission)
+        # fix initial balance
+        if rp_commission != 1:
+            prev_balance = applyRPRewards(prev_balance, rp_commission)
+
         for vb in validator_balances:
+            vb.balance = applyRPRewards(vb.balance, rp_commission)
             slot_date = (await BeaconNode.datetime_for_slot(vb.slot, timezone)).date()
 
             eod_balances.append(
-                EndOfDayBalance(
-                    date=slot_date,
-                    slot=vb.slot,
-                    balance=vb.balance,
-                )
+                EndOfDayBalance(date=slot_date, slot=vb.slot, balance=vb.balance)
             )
 
             # Calculate earnings
