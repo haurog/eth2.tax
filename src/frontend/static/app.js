@@ -695,10 +695,10 @@ function switchChain() {
     console.log(imageElement.innerHTML);
     if (chain === "Ethereum") {
         chain = "Gnosis";
-        document.getElementById("chain_logo").innerHTML = `<img src="../static/logo/Gnosis_logo.png" alt="Ethereum" width = "300">`;
+        document.getElementById("chain_logo").innerHTML = `<img src="/static/logo/Gnosis_logo.png" alt="Gnosis" height = "80">`;
     } else {
         chain = "Ethereum";
-        document.getElementById("chain_logo").innerHTML = `<img src="../static/logo/Ethereum_logo.png" alt="Ethereum" width = "300">`;
+        document.getElementById("chain_logo").innerHTML = `<img src="/static/logo/Ethereum_logo.png" alt="Ethereum" height = "80">`;
     }
     console.log(chain);
 }
