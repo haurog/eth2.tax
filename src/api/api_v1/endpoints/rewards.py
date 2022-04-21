@@ -21,6 +21,13 @@ from providers.beacon_node import depends_beacon_node, BeaconNode, GENESIS_DATET
 from providers.coin_gecko import depends_coin_gecko, CoinGecko
 from providers.db_provider import depends_db, DbProvider
 
+# Beaconcha.in graft
+# import urllib library
+from urllib.request import urlopen
+
+# import json
+import json
+
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
@@ -284,6 +291,21 @@ async def rewards(
         total_eth = 0
         total_currency = 0
         rp_commission = 0.15
+        url = f"https://beaconcha.in/api/v1/validator/eth1/{validator_index}"
+        url = f"https://beaconcha.in/api/v1/validator/eth1/281763"
+        # store the response of URL
+        json_resp = urlopen(url)
+        # storing the JSON response
+        # from url in data
+        response = json.loads(json_resp.read())
+        print(response)
+        if response.status != 200:
+            raise Exception(
+                f"Error while fetching data from beaconcha.in: {response.content.decode()}"
+            )
+        else:
+            rp_commission = response.data["minipool_node_fee"]
+            print(rp_commission)
         for vb in validator_balances:
             slot_date = (await BeaconNode.datetime_for_slot(vb.slot, timezone)).date()
 
