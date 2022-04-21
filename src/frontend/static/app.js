@@ -215,6 +215,8 @@ function getRewardsForValidatorIndexes(validatorIndexes) {
 
     params.append("currency", document.getElementById("selectCurrency").value)
 
+    params.append("chain", chain)
+
     var url = new URL("/api/v1/rewards", window.location.href)
     url.search = params.toString();
 
